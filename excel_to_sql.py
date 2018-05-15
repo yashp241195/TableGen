@@ -1,4 +1,5 @@
-print("GENERATORS \n")
+
+print("SQL TABLE GENERATOR \n")
 # SQL Generator
 
 
@@ -46,6 +47,11 @@ def ReadFile():
         number_of_lines = int(len(f.readlines()))
         f.seek(0)
 
+        command = []
+        col_arr = []
+        col_type_arr = []
+        t_name = ""
+
         for i in range(number_of_lines):
 
             row = f.readline()
@@ -60,15 +66,27 @@ def ReadFile():
                     text = column_array[j]
                     text = text.lower()
                     text = text.replace(" ", "_")
-                    print(text, end=", ")
+                    col_arr.append(text)
+                    # print(text, end=", ")
 
-                print("")
+                # print("")
 
             if (column_array[0].lower() == 'tn'):
                 # print(column_array)
                 t_name = column_array[1]
 
-                print(t_name,end="\n")
+                # print(t_name,end="\n")
+
+            if (column_array[0].lower() == 'end'):
+
+                cmd = sql_table_generate(t_name, col_arr, col_type_arr)
+                # print("\n",cmd)
+
+                command.append(cmd)
+
+                col_arr = []
+                col_type_arr = []
+                t_name = ""
 
             if (column_array[0].lower() == 'tr'):
                 # print(column_array)
@@ -77,15 +95,14 @@ def ReadFile():
                 for j in range(column_count-2):
                     text = column_array[j]
                     text_type = get_type(text)
-                    print(text,"",text_type, end=", ")
+                    col_type_arr.append(text_type)
+                    # print(text, "",text_type, end=", ")
 
-                print("")
+                # print("")
+        return command
 
 
-col_arr = ['PersonID','PersonID','PersonID']
-col_type_arr = ['int','int','int']
-ReadFile()
-print("")
-cmd = sql_table_generate(t_name,col_arr,col_type_arr)
+cmd_list = []
+cmd_list = ReadFile()
+print(cmd_list, "")
 
-print(cmd)

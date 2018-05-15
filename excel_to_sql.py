@@ -102,7 +102,8 @@ def ReadFile():
         return command
 
 
-cmd_list = []
 cmd_list = ReadFile()
-print(cmd_list, "")
+for i in range(len(cmd_list)):
+    print(cmd_list[i])
+
 

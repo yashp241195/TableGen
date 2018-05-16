@@ -99,7 +99,7 @@ def ReadFile():
 
             if (column_array[0].lower() == 'tn'):
                 # print(column_array)
-                t_name = column_array[1]
+                t_name = column_array[1].replace(' ','_').lower()
 
                 # print(t_name,end="\n")
 
@@ -135,3 +135,4 @@ def ReadFile():
 cmd_list = ReadFile()
 for i in range(len(cmd_list)):
     print(cmd_list[i])
+

@@ -22,7 +22,32 @@ def sql_table_generate(table_name, col_arr, col_type_arr):
 
     return cmd
 
-def is_number(s):
+
+def insert_table_values(table_name, col_arr, col_val_arr):
+    cmd = 'INSERT INTO '+table_name+'('
+
+    size = len(col_arr)
+
+    for i in range(size):
+        column = col_arr[i]
+        cmd += column
+        if i < size-1:
+            cmd += ','
+
+    cmd += ')VALUES('
+
+    for i in range(size):
+        column = col_val_arr[i]
+        cmd += '\''+column+'\''
+        if i < size-1:
+            cmd += ','
+
+    cmd += ');'
+
+    return cmd
+
+
+def is_float(s):
     try:
         float(s)
         return True
@@ -32,13 +57,13 @@ def is_number(s):
 
 def get_type(text):
     if(text.isalpha()):
-        return "varchar"
+        return "varchar(50)"
     elif(text.isdigit()):
-        return "int"
-    elif(is_number(text)):
-        return "Number"
+        return "int(11)"
+    elif(is_float(text)):
+        return "DECIMAL(10,4)"
     else:
-        return "varchar"
+        return "varchar(50)"
 
 
 def ReadFile():
@@ -50,6 +75,7 @@ def ReadFile():
         command = []
         col_arr = []
         col_type_arr = []
+        col_values_arr = []
         t_name = ""
 
         for i in range(number_of_lines):
@@ -80,12 +106,15 @@ def ReadFile():
             if (column_array[0].lower() == 'end'):
 
                 cmd = sql_table_generate(t_name, col_arr, col_type_arr)
+                command.append(cmd)
                 # print("\n",cmd)
-
+                cmd = insert_table_values(t_name, col_arr, col_values_arr)
                 command.append(cmd)
 
+                # truncate all
                 col_arr = []
                 col_type_arr = []
+                col_values_arr = []
                 t_name = ""
 
             if (column_array[0].lower() == 'tr'):
@@ -94,6 +123,7 @@ def ReadFile():
 
                 for j in range(column_count-2):
                     text = column_array[j]
+                    col_values_arr.append(text)
                     text_type = get_type(text)
                     col_type_arr.append(text_type)
                     # print(text, "",text_type, end=", ")
@@ -105,5 +135,3 @@ def ReadFile():
 cmd_list = ReadFile()
 for i in range(len(cmd_list)):
     print(cmd_list[i])
-
-

@@ -1,9 +1,9 @@
-TN,User,
+TN,User details,
 TH,User Id,Name,Address,phone number,weight,
 TR,1,Yash,Ghaziabad,+91-7042212499,70.5,
 END,
 
-TN,User,
+TN,User DetAils,
 TH,User Id,Name,Address,phone number,weight,
 TR,1,Yash,Ghaziabad,+91-7042212499,70.5,
 END,

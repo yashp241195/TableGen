@@ -1,5 +1,5 @@
-print("SQL TABLE GENERATOR \n")
 # SQL Generator
+print("SQL TABLE GENERATOR \n")
 
 
 def sql_table_generate(table_name, col_arr, col_type_arr):
@@ -34,10 +34,16 @@ def insert_table_values(table_name, col_arr, col_val_arr):
             cmd += ','
 
     cmd += ')VALUES('
+    home_address = "C:\\Users\Yash\PycharmProjects\Arrays\\"
 
     for i in range(size):
         column = col_val_arr[i]
-        cmd += '\''+column+'\''
+        if(column[0] == "{" and column[len(column)-1]=="}"):
+            blob_src = '\"'+home_address+column[1:len(column)-1]+'\"'
+            cmd += blob_src
+            pass
+        else:
+            cmd += '\''+column+'\''
         if i < size-1:
             cmd += ','
 
@@ -86,12 +92,19 @@ def is_float(s):
 
 
 def get_type(text):
+
     if(text.isalpha()):
         return "varchar(50)"
+
     elif(text.isdigit()):
         return "int(11)"
+
     elif(is_float(text)):
         return "DECIMAL(10,4)"
+
+    elif(text[0] == '{' and text[len(text)-1] == '}'):
+        return "BLOB(16000000)"
+
     else:
         return "varchar(50)"
 
@@ -103,6 +116,7 @@ def ReadFile():
         f.seek(0)
 
         html_table_code = []
+        html_form_code = []
         command = []
         col_arr = []
         col_type_arr = []
@@ -118,21 +132,15 @@ def ReadFile():
 
             if(column_array[0].lower()=='th'):
                 column_array = column_array[1:column_count-1]
-                # print(column_array)
                 for j in range(column_count-2):
                     text = column_array[j]
                     text = text.lower()
                     text = text.replace(" ", "_")
                     col_arr.append(text)
-                    # print(text, end=", ")
-
-                # print("")
 
             if (column_array[0].lower() == 'tn'):
-                # print(column_array)
                 t_name = column_array[1].replace(' ','_').lower()
 
-                # print(t_name,end="\n")
 
             if (column_array[0].lower() == 'end'):
 
@@ -142,8 +150,8 @@ def ReadFile():
                 cmd = insert_table_values(t_name, col_arr, col_values_arr)
                 command.append(cmd)
 
-                cmd = export_table_php_html(t_name, col_arr, col_values_arr)
-                html_table_code.append(cmd)
+                # cmd = export_table_php_html(t_name, col_arr)
+                # html_table_code.append(cmd)
 
                 # truncate all
                 col_arr = []
@@ -166,19 +174,61 @@ def ReadFile():
         return command,html_table_code
 
 
-cmd_list,html_table_code = ReadFile()
+cmd_list, html_table_code = ReadFile()
 
 for i in range(len(cmd_list)):
     print(cmd_list[i])
     if (i+1) % 2 == 0:
         print("")
 
-print("\n\n Generating Table with PHP Code using Python \n\n ")
+# print("\n\n Generating Table with PHP Code using Python \n\n ")
 
 # For indentations of the code
 # import bs4 as bsoup
 # bsoup._soup(HTML_CODE_TEXT).prettify()
 
 
-for i in range(len(html_table_code)):
-    print(html_table_code[i],end='\n\n\n')
+# for i in range(len(html_table_code)):
+#     print(html_table_code[i],end='\n\n\n')
+
+
+import pymysql as p
+
+# 1. Run SQL on CMD,
+# 2. Open database connection
+
+db = p.connect(
+    user='root',
+    password='',
+    host='localhost',
+    database='test'
+    )
+
+
+def exec_SQL(db, cursor, sql_query):
+    try:
+        # Execute the SQL command
+        cursor.execute(sql_query)
+        # Commit your changes in the database
+        db.commit()
+    except:
+        # Rollback in case there is any error
+        db.rollback()
+
+
+# prepare a cursor object using cursor() method
+cursor = db.cursor()
+
+
+# Drop table if it already exist using execute() method.
+# cursor.execute("DROP TABLE IF EXISTS EMPLOYEE")
+
+# Create table as per requirement
+
+for i in range(len(cmd_list)):
+    sql = cmd_list[i]
+    exec_SQL(db, cursor, sql)
+
+print("Executed")
+
+db.close()

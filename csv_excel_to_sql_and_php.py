@@ -52,7 +52,7 @@ def insert_table_values(table_name, col_arr, col_val_arr):
     return cmd
 
 
-def export_table_php_html(table_name, col_arr, col_val_arr):
+def export_table_php_html(table_name, col_arr):
     cmd = '<thead><tr>'
     size = len(col_arr)
     for i in range(size):
@@ -81,6 +81,49 @@ def export_table_php_html(table_name, col_arr, col_val_arr):
     cmd += '''<?php } ?></tbody>'''
 
     return cmd
+
+
+def export_form_php_html(f_name, f_labels, f_values):
+
+    cmd = '''<form class="form" method="post" 
+    action="'''+f_name+'''.php" role="form">
+        <fieldset>
+    '''
+
+    for i in range(len(f_labels)):
+
+        if(str(f_values[i])[0] == '{' and str(f_values[i])[len(str(f_values[i]))-1] == '}'):
+
+            cmd += '''<div class="form-group">
+                            <input class="form-control" 
+                            name="''' + f_labels[i].replace(" ", "_").lower() + '''" 
+                            type="file"
+                            accept="file_extension|audio/*|video/*|image/*|media_type" 
+                            value="">
+                        </div>'''
+        else:
+
+            cmd += '''<div class="form-group">
+                            <input class="form-control" 
+                            name="'''+f_labels[i].replace(" ", "_").lower()+'''" 
+                            type="'''+get_input_type(f_values[i])+'''" 
+                            value="">
+                        </div>'''
+
+    cmd += "</fieldset></form>"
+    return cmd
+
+
+
+def get_input_type(input_text):
+    if(input_text == "email"):
+        return "email"
+    if (input_text == "password"):
+        return "password"
+    if (get_type(input_text) == "int(11)" or get_type(input_text) == "DECIMAL(10,4)"):
+        return "number"
+
+    return "text"
 
 
 def is_float(s):
@@ -118,10 +161,17 @@ def ReadFile():
         html_table_code = []
         html_form_code = []
         command = []
+
         col_arr = []
         col_type_arr = []
         col_values_arr = []
+
         t_name = ""
+
+        f_name = ""
+
+        form_col_labels_arr = []
+        form_col_types_arr = []
 
         for i in range(number_of_lines):
 
@@ -130,7 +180,9 @@ def ReadFile():
             column_array = row.split(",")
             column_count = len(column_array)
 
-            if(column_array[0].lower()=='th'):
+            TAG = column_array[0].lower()
+
+            if (TAG=='th'):
                 column_array = column_array[1:column_count-1]
                 for j in range(column_count-2):
                     text = column_array[j]
@@ -138,11 +190,10 @@ def ReadFile():
                     text = text.replace(" ", "_")
                     col_arr.append(text)
 
-            if (column_array[0].lower() == 'tn'):
+            if (TAG == 'tn' or TAG == 'ftn'):
                 t_name = column_array[1].replace(' ','_').lower()
 
-
-            if (column_array[0].lower() == 'end'):
+            if (TAG == 'end'):
 
                 cmd = sql_table_generate(t_name, col_arr, col_type_arr)
                 command.append(cmd)
@@ -150,8 +201,8 @@ def ReadFile():
                 cmd = insert_table_values(t_name, col_arr, col_values_arr)
                 command.append(cmd)
 
-                # cmd = export_table_php_html(t_name, col_arr)
-                # html_table_code.append(cmd)
+                cmd = export_table_php_html(t_name, col_arr)
+                html_table_code.append(cmd)
 
                 # truncate all
                 col_arr = []
@@ -159,7 +210,7 @@ def ReadFile():
                 col_values_arr = []
                 t_name = ""
 
-            if (column_array[0].lower() == 'tr'):
+            if (TAG == 'tr'):
                 # print(column_array)
                 column_array = column_array[1:column_count-1]
 
@@ -171,25 +222,60 @@ def ReadFile():
                     # print(text, "",text_type, end=", ")
 
                 # print("")
-        return command,html_table_code
+
+            if (TAG == 'fn'):
+                f_name = column_array[1].replace(' ', '_').lower()
+
+            if (TAG == 'fin'):
+                form_col_labels_arr = column_array[1:len(column_array)-1]
+
+            if (TAG == 'fv'):
+                form_col_types_arr = column_array[1:len(column_array)-1]
+
+            if (TAG == 'fin_exist_auto_fill'):
+
+                pass
+
+            if (TAG == 'f_sta'):
+
+                pass
+
+            if (TAG == 'fend'):
+                cmd = export_form_php_html(f_name,form_col_labels_arr,form_col_types_arr)
+                html_form_code.append(cmd)
 
 
-cmd_list, html_table_code = ReadFile()
+                f_name = ''
+                form_col_labels_arr = []
+                form_col_types_arr = []
+                t_name = ''
+
+
+
+        return command,html_table_code,html_form_code
+
+
+cmd_list, html_table_code,html_form_code = ReadFile()
+
 
 for i in range(len(cmd_list)):
     print(cmd_list[i])
     if (i+1) % 2 == 0:
         print("")
 
-# print("\n\n Generating Table with PHP Code using Python \n\n ")
+print("\n\n Generating Table with PHP Code using Python \n\n ")
 
 # For indentations of the code
 # import bs4 as bsoup
 # bsoup._soup(HTML_CODE_TEXT).prettify()
 
 
-# for i in range(len(html_table_code)):
-#     print(html_table_code[i],end='\n\n\n')
+for i in range(len(html_table_code)):
+    print(html_table_code[i],end='\n\n\n')
+
+
+for i in range(len(html_form_code)):
+    print(html_form_code[i],end='\n\n\n')
 
 
 import pymysql as p
@@ -225,9 +311,9 @@ cursor = db.cursor()
 
 # Create table as per requirement
 
-for i in range(len(cmd_list)):
-    sql = cmd_list[i]
-    exec_SQL(db, cursor, sql)
+# for i in range(len(cmd_list)):
+#     sql = cmd_list[i]
+#     exec_SQL(db, cursor, sql)
 
 print("Executed")
 

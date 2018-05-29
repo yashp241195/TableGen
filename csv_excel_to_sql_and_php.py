@@ -174,7 +174,7 @@ def get_type(text):
 
 
 def ReadFile():
-    with open("table.txt", "r+") as f:
+    with open("table.csv", "r+") as f:
 
         number_of_lines = int(len(f.readlines()))
         f.seek(0)

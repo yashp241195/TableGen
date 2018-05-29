@@ -83,7 +83,12 @@ def export_table_php_html(table_name, col_arr):
     return cmd
 
 
-def export_form_php_html(f_name, f_labels, f_values):
+def export_form_php_html(f_name,t_name, f_labels, f_values):
+
+    action_script = '''  <?php  '''
+
+    col_list = []
+    col_val_list = []
 
     cmd = '''<form class="form" method="post" 
     action="'''+f_name+'''.php" role="form">
@@ -101,6 +106,13 @@ def export_form_php_html(f_name, f_labels, f_values):
                             accept="file_extension|audio/*|video/*|image/*|media_type" 
                             value="">
                         </div>'''
+
+            att = f_labels[i].replace(" ", "_").lower()
+            col_list.append(att)
+            col_val_list.append(att)
+            action_script += '''$'''+att+''' = base64_encode(file_get_contents
+            ($_FILES["'''+att+'''"]['tmp_name']));'''
+
         else:
 
             cmd += '''<div class="form-group">
@@ -110,8 +122,18 @@ def export_form_php_html(f_name, f_labels, f_values):
                             value="">
                         </div>'''
 
+            att = f_labels[i].replace(" ", "_").lower()
+            col_list.append(att)
+            col_val_list.append(att)
+            action_script += '''$'''+att+''' = $_POST["'''+att+'''"];'''
+
+    my_cmd = insert_table_values(t_name, col_list, col_val_list)
+    action_script += '''
+    '''+my_cmd+'''
+    ?>'''
     cmd += "</fieldset></form>"
-    return cmd
+
+    return cmd, action_script
 
 
 
@@ -241,8 +263,9 @@ def ReadFile():
                 pass
 
             if (TAG == 'fend'):
-                cmd = export_form_php_html(f_name,form_col_labels_arr,form_col_types_arr)
-                html_form_code.append(cmd)
+                cmd1, cmd2 = export_form_php_html(f_name, t_name, form_col_labels_arr, form_col_types_arr)
+                html_form_code.append(cmd1)
+                html_form_code.append(cmd2)
 
 
                 f_name = ''

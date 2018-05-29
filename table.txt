@@ -14,59 +14,33 @@ TR,1,Iterative Statements,{documents\code\code1.html},
 END,
 
 TN,Code belongs to content,
-TJOIN ATTRIBUTES,*,
-TJOIN TABLES,Code,Code id,inner join,Content,article id,
 TH,code id,article id,code pref no,
 TR,1,1,1,
 END,
 
 TN,MCQ belongs to content,
-TJOIN ATTRIBUTES,*,
-TJOIN TABLES,MCQ,Question id,inner join,Content,article id,
 TH,Question id,article id,mcq pref no,
 TR,1,1,1,
 END,
 
-FN,upload_content,
+FN,upload content,
 FTN,Content,
-FAS,upload_content.php,
 FIN,article id,article name,document,
 FV,1,Introduction to Programming with Python,{documents\lec1.html},
-FReq,*,
 FEND,
 
-FN,upload_mcq,
+FN,upload mcq,
 FTN,MCQ,
-FJOIN,MCQ,Question id,inner join,Content,article id,
-FAS,upload_mcq.php,
-FIN,Question id,Question,option A,option B,option C,option D,answer,explanation,
-FV,1,Who will be next PM of India,Narendra Modi,Rahul Gandhi,Lalu Yadav,Osama Bin Ladin,A, he won most seat in election,
-FReq,{1-3,5-6,7},
+FIN,Question id,Question,option A,option B,option C,option D,answer,explanation,pref no,
+FV,1,Who will be next PM of India,Narendra Modi,Rahul Gandhi,Lalu Yadav,Osama Bin Ladin,A, he won most seat in election,1,
 FIN_EXIST_AUTO_FILL,article id,filled by,article name,
-FV_EXIST_AUTO_FILL,1,-,Introduction to Programming with Python,
-F_EXTRA,pref no,
 F_STA,MCQ belongs to content,Question id,article id,mcq pref no,
 FEND,
 
-FN,upload_code,
+FN,upload code,
 FTN,Code,
-FAS,upload_code.php,
-FIN,Code id,Code Name,Program,
-FV,1,Iterative Statements,{documents\code\code1.html},
-FReq,*,
+FIN,Code id,Code Name,Program,pref no,
+FV,1,Iterative Statements,{documents\code\code1.html},1,
 FIN_EXIST_AUTO_FILL,article id,filled by,article name,
-FV_EXIST_AUTO_FILL,1,-,Introduction to Programming with Python,
-F_EXTRA,pref no,
 F_STA,Code belongs to content,Code id,article id,code pref no,
 FEND,
-
-BREAK;
-
---- RULES AND ADVISORY ---
-1. Make sure all attributes are different so that there will be no
-   problem when making join
-   (
-        "table_name.attribute_name" should be avoided to prevent
-        confusions while building Large Scale Projects
-   )
-

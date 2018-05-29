@@ -136,7 +136,6 @@ def export_form_php_html(f_name,t_name, f_labels, f_values):
     return cmd, action_script
 
 
-
 def get_input_type(input_text):
     if(input_text == "email"):
         return "email"
@@ -254,13 +253,6 @@ def ReadFile():
             if (TAG == 'fv'):
                 form_col_types_arr = column_array[1:len(column_array)-1]
 
-            if (TAG == 'fin_exist_auto_fill'):
-
-                pass
-
-            if (TAG == 'f_sta'):
-
-                pass
 
             if (TAG == 'fend'):
                 cmd1, cmd2 = export_form_php_html(f_name, t_name, form_col_labels_arr, form_col_types_arr)

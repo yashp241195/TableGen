@@ -13,45 +13,72 @@ class FooterPHP(object):
         pass
 
 
+# Table Object
+
+
 class Table(object):
-    def __init__(self, t_name, column_list):
+    def __init__(self,
+                 t_name,
+                 column_list,
+                 first_row,
+                 t_view_fn,
+                 t_modify_fn,
+                 f_view_fn,
+                 f_modify_fn
+                 ):
+
+        # Table Data
+
         self.table_name = t_name
-        self.attributes = column_list
+        self.attributes_heading = column_list
+        self.sample_attributes_values = first_row
+        self.attributes_type = None
 
-    def get_type(self):
-        pass
+        # Table File Name
 
-    def create_query(self):
-        pass
+        self.table_view_file_name = t_view_fn
+        self.table_modify_validation_file_name = t_modify_fn
 
-    def insert_query(self):
-        pass
+        # Form File Name
 
-    def export_php_html_table(self):
-        pass
+        self.form_view_file_name = f_view_fn
+        self.form_modify_validation_file_name = f_modify_fn
 
+        # Functionality
 
-class Form(object):
-    def __init__(self, f_name, t_name):
-        self.form_name = f_name
-        self.table_name = t_name
+        # CRUD Operations in Table SQL
 
-    def get_input_type(self):
-        pass
+        def create_table_sql():
+            pass
 
-    def export_form_php_html(self):
-        pass
+        def insert_table_sql():
+            pass
 
-    def export_form_validator(self):
-        pass
+        def update_table_sql():
+            pass
 
+        def delete_table_sql():
+            pass
 
-class MergedForm(object):
-    def __init__(self, forms):
-        pass
+        # CRUD Operations in Table PHP
+        # View table on a web page by reading
 
-    def export_merged_form_php_html(self):
-        pass
+        def table_view_php_html():
+            pass
 
-    def export_merged_form_validator(self):
-        pass
+        # Perform table row update,delete,insert
+
+        def table_modify_php_html():
+            pass
+
+        # Form 
+        
+        # Insert the value inside the form
+        
+        def form_fill_php_html():
+            pass
+        
+        # validate the input value in form
+        
+        def form_validate_php_html():
+            pass

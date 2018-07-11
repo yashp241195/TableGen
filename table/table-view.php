@@ -20,3 +20,10 @@
     </tbody>
 
 </table>
+
+
+<script type="text/javascript" src="ajax_js/display_rows.js">
+</script>
+
+<script type="text/javascript" src="ajax_js/fill_table_details.js">
+</script>

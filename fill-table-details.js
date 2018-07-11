@@ -280,11 +280,11 @@
         }
 
 
-        var bm_val = JSON.stringify(cell_values);
-        var bm_name = JSON.stringify(cell_col_names);
+        var arr_vals = JSON.stringify(cell_values);
+        var arr_names = JSON.stringify(cell_col_names);
         var t_name = JSON.stringify(table_name);
 
-        console.log(t_name,bm_val,bm_name);
+        console.log(t_name,arr_vals,arr_names);
 
 
         var xmlhttp = new XMLHttpRequest();
@@ -302,13 +302,13 @@
         
         };
 
-        xmlhttp.send('bm_val='+bm_val+'&bm_name='+bm_name+'&t_name='+t_name);
+        xmlhttp.send('arr_vals='+arr_vals+'&arr_names='+arr_names+'&t_name='+t_name);
 
 
     }
 
 
-    function edit_row_db(j,table_name){
+    function edit_row(j,table_name){
 
         var table = document.getElementById(table_name);
         var table_edit_row_action = document.getElementById(table_name+"_edit_row_"+j).parentElement; 
@@ -379,7 +379,12 @@
     function refresh_table(){
         window.location.reload(true);
     }
-        
+      
+
+/* 
+    code not to Touch End here 
+
+*/        
 
     function insert_multiple_rows(table_name,num){
 

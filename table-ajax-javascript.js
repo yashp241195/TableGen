@@ -51,6 +51,10 @@
             ["remarks","text","70","",""],             
         ];
 
+
+    // 
+
+
     var col_count_bm = col_count_bs = col_count_st = col_count_ws = 1;
 
     var col_max_count_bm = body_measurements.length;
@@ -156,7 +160,9 @@
 
     }
 
-
+/*
+    Please don't touch the code below
+*/
         
     function insert_row(table_name){
                 
@@ -224,8 +230,11 @@
 
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                var table_row_action = document.getElementById(table_name+"_row_"+j).parentElement; 
-                table_row_action.innerHTML =  xmlhttp.responseText;
+                var table_row_action = document.getElementById(table_name+"_row_"+j).parentElement;
+                // delete button does not exist in edit_row, table updatation 
+                if(table_row_action != null){
+                    table_row_action.innerHTML =  xmlhttp.responseText;
+                }                 
                 console.log(xmlhttp.responseText);
             }
         };
@@ -284,11 +293,13 @@
         xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
         xmlhttp.onreadystatechange = function() {
+
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var status = content[content.length-1]; 
                 status.innerHTML =  xmlhttp.responseText;
                 console.log(xmlhttp.responseText);
             }
+        
         };
 
         xmlhttp.send('bm_val='+bm_val+'&bm_name='+bm_name+'&t_name='+t_name);
@@ -312,8 +323,6 @@
         // console.log(max_count);
 
         for (var i = 0; i < max_count; i++) {
-
-            
 
 
             var column_property_array = [];
@@ -346,8 +355,8 @@
         }
 
 
-        var save_str = "<a class='glyphicon glyphicon-save btn btn-xs btn-success' ";
-        save_str += "onclick= \"save_row("+row_Index+",'"+table_name+"')\">Save</a>";
+        var save_str = "<a class='glyphicon glyphicon-save btn btn-xs btn-warning' ";
+        save_str += "onclick= \"update_row("+j+","+row_Index+",'"+table_name+"') \">update</a>";
 
         string += "<td> "+"<div><div class='row'><div class='col-xs-4'>"+save_str+
         "</div><div class='col-xs-4'></div></div></div></td>";
@@ -355,9 +364,13 @@
         row.innerHTML= string;
 
 
+    }
 
 
+    function update_row(j,row_Index,table_name){
 
+        save_row(row_Index,table_name);
+        delete_row_db(j,table_name);
 
     }
 
@@ -370,31 +383,10 @@
 
     function insert_multiple_rows(table_name,num){
 
-        workout_schedule[0][4] = 1;
-        workout_schedule[1][4] = "yy@gmail.com";
-        workout_schedule[2][4] = 1;
-        workout_schedule[3][4] = 1;
-        workout_schedule[4][4] = 1;
-        workout_schedule[5][4] = 1;
-
-
         for(i=0; i<num; i++){
             insert_row(table_name);
         }
         
-        workout_schedule[0][4] = 1;
-        workout_schedule[1][4] = 1;
-        workout_schedule[2][4] = 1;
-        workout_schedule[3][4] = 1;
-        workout_schedule[4][4] = 1;
-        workout_schedule[5][4] = 1;
-        
 
     }
-
-
-
-
-
-
 

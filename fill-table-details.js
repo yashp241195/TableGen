@@ -42,13 +42,13 @@
 
     var workout_schedule = [
             ["date","date","140","",""],
-            ["email","email","140","",""],
-            ["exercise_name","text","70","","1"],
+            ["email","email","120","","1"],
+            ["exercise_name","text","100","",""],
             ["reps_current","number","70","",""],
             ["reps_target","number","70","",""],
-            ["body_area","text","70","",""],
-            ["exercise_category","text","70","",""],
-            ["remarks","text","70","",""],             
+            ["body_area","text","100","",""],
+            ["exercise_category","text","100","",""],
+            ["remarks","text","100","",""],             
         ];
 
 
@@ -388,9 +388,33 @@
 
     function insert_multiple_rows(table_name,num){
 
+            if(table_name == "workout_schedule"){
+
+                var chk = document.getElementById("chk_available");
+                if(chk.textContent != "Email already exists"){
+                
+                return 0;
+
+            }
+
+
+            var email = document.getElementById("email_id").value;
+            console.log("email : "+email);
+            workout_schedule[1][4] = email;
+                
+            var date = document.getElementById("date_ws").value;
+            workout_schedule[0][4] = String(date);
+            console.log("date : "+date);
+
+        }
+
         for(i=0; i<num; i++){
             insert_row(table_name);
         }
+
+        // reset
+        // workout_schedule[0][4] = "";
+        // workout_schedule[1][4] = "";
         
 
     }

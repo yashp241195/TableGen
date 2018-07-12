@@ -1,4 +1,4 @@
-var page_count_bm = page_count_bs = page_count_st = page_count_ws = 1;
+var page_count_bm = 1;
 
 
 function set_table_page_limit(table_name,value){
@@ -8,18 +8,7 @@ function set_table_page_limit(table_name,value){
             case "body_measurements":                
                 page_count_bm = value;
                 break;
-
-            case "body_scanning":                
-                page_count_bs = value;
-                break;
-
-            case "scientific_test":                
-                page_count_st = value;
-                break;
-
-            case "workout_schedule":                
-                page_count_ws = value;
-                break;
+           
         }
 
 }
@@ -31,14 +20,6 @@ function get_table_page_limit(table_name){
             case "body_measurements":                
                 return page_count_bm;
 
-            case "body_scanning":                
-                return page_count_bs;
-
-            case "scientific_test":                
-                return page_count_st;
-
-            case "workout_schedule":                
-                return page_count_ws;
         }
         
 }
@@ -120,11 +101,4 @@ function pageination(t_name, pg=1){
 
 
 get_table_data("body_measurements",1);
-get_table_data("body_scanning",1);
-get_table_data("scientific_test",1);
-get_table_data("workout_schedule",1);
-
 pageination('body_measurements');
-pageination('body_scanning');
-pageination('scientific_test');
-pageination('workout_schedule');
